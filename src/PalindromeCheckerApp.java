@@ -1,21 +1,24 @@
 import java.util.Scanner;
 
-public class UseCase9PalindromeCheckerApp {
+public class UseCase10PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Recursive Palindrome Checker ===");
+        System.out.println("=== Case-Insensitive & Space-Ignored Palindrome Checker ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Remove spaces and convert to lowercase
-        String processedInput = input.replaceAll("\\s+", "").toLowerCase();
+        // Step 1: Normalize string
+        // Remove spaces and special characters, convert to lowercase
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        boolean result = isPalindrome(processedInput, 0, processedInput.length() - 1);
+        // Step 2: Apply palindrome logic using two-pointer approach
+        boolean isPalindrome = checkPalindrome(normalized);
 
-        if (result) {
+        // Step 3: Print result
+        if (isPalindrome) {
             System.out.println("Result: The given string is a Palindrome.");
         } else {
             System.out.println("Result: The given string is NOT a Palindrome.");
@@ -24,20 +27,21 @@ public class UseCase9PalindromeCheckerApp {
         scanner.close();
     }
 
-    // Recursive method
-    public static boolean isPalindrome(String str, int start, int end) {
+    public static boolean checkPalindrome(String str) {
 
-        // Base condition: if pointers cross or meet
-        if (start >= end) {
-            return true;
+        int left = 0;
+        int right = str.length() - 1;
+
+        while (left < right) {
+
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+
+            left++;
+            right--;
         }
 
-        // If mismatch found
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive call shrinking the problem
-        return isPalindrome(str, start + 1, end - 1);
+        return true;
     }
 }
