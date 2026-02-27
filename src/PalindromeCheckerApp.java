@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Stack;
 
 public class PalindromeCheckerApp {
 
@@ -6,30 +7,38 @@ public class PalindromeCheckerApp {
 
         Scanner scanner = new Scanner(System.in);
 
-        // Take user input
-        System.out.print("Enter text: ");
-        String text = scanner.nextLine();
+        System.out.println("=== Stack Based Palindrome Checker ===");
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
 
-        // Convert string to character array
-        char[] characters = text.toCharArray();
+        // Remove spaces and convert to lowercase
+        String processedInput = input.replaceAll("\\s+", "").toLowerCase();
 
-        // Two-pointer approach
-        int start = 0;
-        int end = characters.length - 1;
+        Stack<Character> stack = new Stack<>();
+
+        // Push all characters into stack
+        for (int i = 0; i < processedInput.length(); i++) {
+            stack.push(processedInput.charAt(i));
+        }
+
         boolean isPalindrome = true;
 
-        while (start < end) {
-            if (characters[start] != characters[end]) {
+        // Pop and compare
+        for (int i = 0; i < processedInput.length(); i++) {
+            char poppedChar = stack.pop();
+
+            if (processedInput.charAt(i) != poppedChar) {
                 isPalindrome = false;
                 break;
             }
-            start++;
-            end--;
         }
 
-        System.out.println("INPUT text : " + text);
-        System.out.println("IS it a Palindrome ?: " + isPalindrome);
-
+        // Print Result
+        if (isPalindrome) {
+            System.out.println("Result: The given string is a Palindrome.");
+        } else {
+            System.out.println("Result: The given string is NOT a Palindrome.");
+        }
         scanner.close();
     }
 }
