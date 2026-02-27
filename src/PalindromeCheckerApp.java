@@ -5,19 +5,16 @@ import java.util.*;
  */
 interface PalindromeStrategy {
     boolean check(String input);
+    String getName();
 }
 
 
 /*
- * Concrete Strategy 1
- * Uses Stack Data Structure
+ * Stack Strategy
  */
-class StackStrategy implements UseCase12PalindromeCheckerApp{
+class StackStrategy implements PalindromeStrategy {
 
-    @Override
     public boolean check(String input) {
-
-        if (input == null) return false;
 
         String cleaned = input.replaceAll("\\s+", "").toLowerCase();
         Stack<Character> stack = new Stack<>();
@@ -34,19 +31,19 @@ class StackStrategy implements UseCase12PalindromeCheckerApp{
 
         return true;
     }
+
+    public String getName() {
+        return "Stack Strategy";
+    }
 }
 
 
 /*
- * Concrete Strategy 2
- * Uses Deque Data Structure
+ * Deque Strategy
  */
 class DequeStrategy implements PalindromeStrategy {
 
-    @Override
     public boolean check(String input) {
-
-        if (input == null) return false;
 
         String cleaned = input.replaceAll("\\s+", "").toLowerCase();
         Deque<Character> deque = new ArrayDeque<>();
@@ -63,27 +60,38 @@ class DequeStrategy implements PalindromeStrategy {
 
         return true;
     }
+
+    public String getName() {
+        return "Deque Strategy";
+    }
 }
 
 
 /*
- * Context Class
- * Strategy injected at runtime
+ * Two Pointer Strategy (Optimized)
  */
-class PalindromeChecker {
+class TwoPointerStrategy implements PalindromeStrategy {
 
-    private PalindromeStrategy strategy;
+    public boolean check(String input) {
 
-    public PalindromeChecker(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+        String cleaned = input.replaceAll("\\s+", "").toLowerCase();
+
+        int left = 0;
+        int right = cleaned.length() - 1;
+
+        while (left < right) {
+            if (cleaned.charAt(left) != cleaned.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+
+        return true;
     }
 
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean checkPalindrome(String input) {
-        return strategy.check(input);
+    public String getName() {
+        return "Two Pointer Strategy";
     }
 }
 
@@ -91,40 +99,36 @@ class PalindromeChecker {
 /*
  * Main Application
  */
-public class UseCase12PalindromeCheckerApp {
+public class UseCase13PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("===== Palindrome Checker App (Strategy Pattern) =====");
-        System.out.println("Choose Algorithm:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
-        System.out.print("Enter choice (1 or 2): ");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
+        System.out.println("===== Palindrome Performance Comparison App =====");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        PalindromeStrategy strategy;
+        List<PalindromeStrategy> strategies = new ArrayList<>();
+        strategies.add(new StackStrategy());
+        strategies.add(new DequeStrategy());
+        strategies.add(new TwoPointerStrategy());
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        System.out.println("\n--- Performance Results ---");
 
-        PalindromeChecker checker = new PalindromeChecker(strategy);
+        for (PalindromeStrategy strategy : strategies) {
 
-        boolean result = checker.checkPalindrome(input);
+            long startTime = System.nanoTime();
 
-        if (result) {
-            System.out.println("Result: The given string IS a palindrome.");
-        } else {
-            System.out.println("Result: The given string is NOT a palindrome.");
+            boolean result = strategy.check(input);
+
+            long endTime = System.nanoTime();
+            long duration = endTime - startTime;
+
+            System.out.println("Algorithm: " + strategy.getName());
+            System.out.println("Result: " + (result ? "Palindrome" : "Not Palindrome"));
+            System.out.println("Execution Time: " + duration + " nanoseconds");
+            System.out.println("------------------------------------");
         }
 
         scanner.close();
