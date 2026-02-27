@@ -42,6 +42,7 @@ public class UseCase10PalindromeCheckerApp {
             right--;
         }
 
+
         return true;
     }
 }
