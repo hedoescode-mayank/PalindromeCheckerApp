@@ -34,6 +34,7 @@ public class PalindromeCheckerApp {
                 isPalindrome = false;
                 break;
             }
+
         }
 
         // Print Result
