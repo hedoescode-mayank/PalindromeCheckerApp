@@ -1,38 +1,19 @@
 import java.util.Scanner;
 
-public class PalindromeCheckerApp {
-
-    // Node class for Singly Linked List
-    static class Node {
-        char data;
-        Node next;
-
-        Node(char data) {
-            this.data = data;
-            this.next = null;
-        }
-    }
+public class UseCase9PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Linked List Based Palindrome Checker ===");
+        System.out.println("=== Recursive Palindrome Checker ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
         // Remove spaces and convert to lowercase
         String processedInput = input.replaceAll("\\s+", "").toLowerCase();
 
-        if (processedInput.length() == 0) {
-            System.out.println("Result: The given string is a Palindrome.");
-            return;
-        }
-
-        // Convert string to linked list
-        Node head = createLinkedList(processedInput);
-
-        boolean result = isPalindrome(head);
+        boolean result = isPalindrome(processedInput, 0, processedInput.length() - 1);
 
         if (result) {
             System.out.println("Result: The given string is a Palindrome.");
@@ -43,65 +24,20 @@ public class PalindromeCheckerApp {
         scanner.close();
     }
 
-    // Create linked list from string
-    public static Node createLinkedList(String str) {
-        Node head = new Node(str.charAt(0));
-        Node current = head;
+    // Recursive method
+    public static boolean isPalindrome(String str, int start, int end) {
 
-        for (int i = 1; i < str.length(); i++) {
-            current.next = new Node(str.charAt(i));
-            current = current.next;
-        }
-
-        return head;
-    }
-
-    // Check palindrome using linked list
-    public static boolean isPalindrome(Node head) {
-
-        if (head == null || head.next == null)
+        // Base condition: if pointers cross or meet
+        if (start >= end) {
             return true;
-
-        // Step 1: Find middle using Fast & Slow pointer
-        Node slow = head;
-        Node fast = head;
-
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
         }
 
-        // Step 2: Reverse second half
-        Node secondHalf = reverseList(slow);
-
-        // Step 3: Compare first half and reversed second half
-        Node firstHalf = head;
-        Node tempSecond = secondHalf;
-
-        while (tempSecond != null) {
-            if (firstHalf.data != tempSecond.data)
-                return false;
-
-            firstHalf = firstHalf.next;
-            tempSecond = tempSecond.next;
+        // If mismatch found
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
         }
 
-        return true;
-    }
-
-    // Reverse linked list
-    public static Node reverseList(Node head) {
-
-        Node prev = null;
-        Node current = head;
-
-        while (current != null) {
-            Node nextNode = current.next;
-            current.next = prev;
-            prev = current;
-            current = nextNode;
-        }
-
-        return prev;
+        // Recursive call shrinking the problem
+        return isPalindrome(str, start + 1, end - 1);
     }
 }
